@@ -1,10 +1,49 @@
+let mensagens = [];
+acessarApi ();
+nomeDoUser ();
+
+function acessarApi () {
+    const promise=axios.get('https://mock-api.driven.com.br/api/v6/uol/messages');
+    setInterval (function () {
+        promise
+    }, 3000);
+    promise.then(carregarDados);
+
+}
+
+function carregarDados (response) {
+    mensagens=response.data;
+    adcMensagens ();
+    
+}
+
+function adcMensagens () {
+    for (let i=0; i<mensagens.length; i++) {
+        if (mensagens[i].type=="message") {
+            document.querySelector(".mensagens").innerHTML+= `<li class="caixademensagem message">
+            ${mensagens[i].time} <strong>${mensagens[i].from}</strong> para <strong>${mensagens[i].to}</strong>: ${mensagens[i].text}
+            </li>`
+        } else if (mensagens[i].type=="private_message"){
+            document.querySelector(".mensagens").innerHTML+= `<li class="caixademensagem privatemessage">
+            ${mensagens[i].time} <strong>${mensagens[i].from}</strong> para <strong>${mensagens[i].to}</strong>: ${mensagens[i].text}
+            </li>`
+        } else if (mensagens[i].type=="status") {
+            document.querySelector(".mensagens").innerHTML+= `<li class="caixademensagem status">
+            ${mensagens[i].time} <strong>${mensagens[i].from}</strong> ${mensagens[i].text}
+            </li>`
+        }
+    }
+}
+
+
+
 let nomes = {
     name: null
 }
 
 function nomeDoUser () {
     nomes.name = prompt("Qual seu nome?")
-    let promise = axios.post ('https://mock-api.driven.com.br/api/v6/uol/participants ', nomes)
+    const promise = axios.post ('https://mock-api.driven.com.br/api/v6/uol/participants ', nomes)
     promise.then(tratarSucesso)
     promise.catch(tratarErro)
 }
@@ -12,6 +51,9 @@ function nomeDoUser () {
 function tratarSucesso (resposta) {
     if (resposta.status==200) {
         alert ("Bem vindo " +nomes.name)
+        setInterval(function() {
+            axios.post('https://mock-api.driven.com.br/api/v6/uol/status', nomes)
+        }, 5000)
     }
 
 }
@@ -19,24 +61,24 @@ function tratarSucesso (resposta) {
 function tratarErro (erro) {
     if (erro.response.status==400) {
         nomes.name=prompt("O nome desejado ja está em uso, por favor utilize outro.")
-        let promise = axios.post ('https://mock-api.driven.com.br/api/v6/uol/participants ', nomes)
+        const promise = axios.post ('https://mock-api.driven.com.br/api/v6/uol/participants ', nomes)
         promise.then(tratarSucesso)
         promise.catch(tratarErro)
-        
-        
-        
     }
 
 }
 
-setInterval(function() {
-    axios.get('https://mock-api.driven.com.br/api/v6/uol/messages')
-}, 3000)
-
-
-nomeDoUser ();
 
 function enviarMensagem () {
-
+    const mensagem= {
+        from: nomes.name,
+        to: 'todos',
+        text: document.querySelector(".mensagem").value,
+        type: 'message'
+    }
+    let promisse=axios.post('https://mock-api.driven.com.br/api/v6/uol/messages', mensagem)
+    promisse.then(function(){
+        alert ("Mensagem enviada")
+    })
 
 }

@@ -64,7 +64,6 @@ body {
 .message {
     background-color: #FFFFFF;
     
-
 }
 
 .privatemessage {
@@ -80,6 +79,7 @@ body {
 
 
 strong {
-    font-weight: bolder;
+    
+    font-weight: bold;
     
 }

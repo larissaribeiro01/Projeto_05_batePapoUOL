@@ -4,7 +4,7 @@ let nomes = {
 }
 
 nomeDoUser ();
-acessarApi ();
+acessarApi();
 
 
 function nomeDoUser () {
@@ -39,10 +39,11 @@ function tratarErro (erro) {
 
 function acessarApi () {
     const promise=axios.get('https://mock-api.driven.com.br/api/v6/uol/messages');
-    setInterval (function () {
-        promise
-    }, 3000);
+    setInterval (function() {
+        promise;
+    }, 3000)
     promise.then(carregarDados);
+    
 
 }
 
@@ -56,18 +57,21 @@ function adcMensagens () {
     for (let i=0; i<mensagens.length; i++) {
         if (mensagens[i].type=="message") {
             document.querySelector(".mensagens").innerHTML+= `<li class="caixademensagem message">
-            ${mensagens[i].time}  <strong>${mensagens[i].from}</strong>  para  <strong>${mensagens[i].to}</strong>: ${mensagens[i].text}
+            ${mensagens[i].time} &nbsp <strong>${mensagens[i].from}</strong>&nbsp para &nbsp<strong>${mensagens[i].to}</strong>: &nbsp ${mensagens[i].text}
             </li>`
         } else if (mensagens[i].type=="private_message" && mensagens[i].from==nomes.name){
             document.querySelector(".mensagens").innerHTML+= `<li class="caixademensagem privatemessage">
-            ${mensagens[i].time}  <strong>${mensagens[i].from}</strong>  para  <strong>${mensagens[i].to}</strong>: ${mensagens[i].text}
+            ${mensagens[i].time} &nbsp <strong>${mensagens[i].from}</strong> &nbsp  para &nbsp  <strong>${mensagens[i].to}</strong>: &nbsp ${mensagens[i].text}
             </li>`
         } else if (mensagens[i].type=="status") {
             document.querySelector(".mensagens").innerHTML+= `<li class="caixademensagem status">
-            ${mensagens[i].time} <strong>${mensagens[i].from}</strong> ${mensagens[i].text}
+            ${mensagens[i].time} &nbsp <strong>${mensagens[i].from}</strong> &nbsp ${mensagens[i].text}
             </li>`
         }
+        
     }
+    document.querySelector(".mensagens").scrollIntoView(false);
+
 }
 
 
@@ -86,5 +90,8 @@ function enviarMensagem () {
     promisse.then(function(){
         alert ("Mensagem enviada")
     })
+    
+    acessarApi();
 
 }
+
